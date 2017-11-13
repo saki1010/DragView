@@ -1,2 +1,3 @@
 # DragView
 可任意拖拽的控件
+DragView的父控件必须与代码中的LayoutParams相对应
