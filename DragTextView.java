@@ -35,7 +35,7 @@ public class DragTextView extends android.support.v7.widget.AppCompatTextView {
     }
 
     private float downX,downY;
-    private int bottomBarY = 225;   //底部导航高度--若无可取消
+    private int bottomBarY = 0;   //底部导航高度--若无可设为0
     private int WH = 135;    //固定宽高--控件的宽高
 
     //重写触摸的方法
@@ -66,6 +66,15 @@ public class DragTextView extends android.support.v7.widget.AppCompatTextView {
         }
         return isBreak;
     }
+    
+    private int parentHeight, parentWidth;
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        ViewGroup parent = (ViewGroup) getParent();
+        parentHeight = parent.getHeight();
+        parentWidth = parent.getWidth();
+    }
 
     private double getRange(float sx,float sy,float ex,float ey){
         float rangX = Math.abs(sx - ex);
@@ -88,6 +97,11 @@ public class DragTextView extends android.support.v7.widget.AppCompatTextView {
         bottom = top + WH;
         right = left + WH;
 //        L.i("L="+left+"#T="+top+"#R="+right+"#B="+bottom);
+        if (parentHeight > 0 && parentHeight > 0){
+            if (top < 0 || left < 0 || bottom > parentHeight || right > parentWidth){
+                return;
+            }
+        }
         this.setFrame(left, top, right, bottom);
         setLayout();
         xUp = event.getRawX();
